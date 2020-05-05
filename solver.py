@@ -1,4 +1,4 @@
-import homework_solver, subprocess, os.path, smtplib, types
+import solver_class, subprocess, os.path, smtplib, types
 
 course_options = {"1": "https://aprendoencasa.pe/#/nivel/secundaria/grade/3/speciality/37/resources", "2":"https://aprendoencasa.pe/#/nivel/secundaria/grade/3/speciality/33/resources", "quit":"quit"}
 send_email_options = ["1", "2", "quit"]
