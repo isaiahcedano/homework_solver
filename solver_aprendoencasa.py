@@ -4,7 +4,7 @@
 import requests, PyPDF2, os, re, time, types, sys, smtplib
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from playsound import playsound
 
 class HomeworkSolver:
@@ -16,10 +16,17 @@ class HomeworkSolver:
 
     def __init__(self, email, password):
         self.start_time = time.time()
+
         print("[!] If this program is interrupted in any given moment, it will crash\n")
         reload(sys)
         sys.setdefaultencoding('utf8')
         self.browser = webdriver.Firefox()
+
+        # for webdriver in self.web_driverss:
+        #     try:
+        #         self.browser = self.web_drivers[webdriver]
+        #     except WebDriverException:
+        #         continue
         self.homework_files_names = []
         self.total_pdf_text_extraction = ""
         self.file_extraction_dict = {} # For each file there is corresponding text. File is key, text is value
@@ -245,7 +252,7 @@ class HomeworkSolver:
         print("Homework Answers : " + str(self.content_of_valid_brainly_links) + self.space_between_lines)
         print("Websites of First Page Results : " + str(self.websites_of_first_page_search_result) + self.space_between_lines)
 
-    def return_answers_by_url(self, email, password, homework_url, sections_to_click_through):
+    def return_answers_by_url(self, email, password, homework_url, sections_to_click_through, verbose):
         self.homework_url = homework_url
         self.resource_homework_url = self.homework_url
         self.browser.get(self.resource_homework_url)
@@ -282,7 +289,7 @@ class HomeworkSolver:
         self.general_return_answers()
 
         # Step 7
-        self.get_homework_result
+        self.get_homework_result()
 
         # Step 8
         self.terminate()
@@ -291,7 +298,7 @@ class HomeworkSolver:
             self.send_mail(email, password, "Homework Task Successful")
         
 
-    def return_answers_by_document(self, document_name, email, password):
+    def return_answers_by_document(self, document_name, email, password, verbose):
         # Append the document to the homework files 
         self.homework_files_names.append(document_name)
 
@@ -313,11 +320,13 @@ class HomeworkSolver:
 
         if email != "" and password != "":
             self.send_mail(email, password, "Homework Task Successful")
+        if verbose != False:
+            self.get_extra_data()
 
-    def run(self, method_to_apply, homework_url, document_name, sections):
+    def run(self, method_to_apply, homework_url, document_name, sections, verbose):
         if ((homework_url == "") and (document_name != "") and (method_to_apply == "1")):
-            self.return_answers_by_document(document_name, self.email, self.password)
+            self.return_answers_by_document(document_name, self.email, self.password, verbose)
         elif ((homework_url != "") and (document_name == "") and (method_to_apply == "2")):
-            self.return_answers_by_url(self.email, self.password, homework_url, sections)
+            self.return_answers_by_url(self.email, self.password, homework_url, sections, verbose)
         elif ((homework_url != "") and (document_name == "") and (method_to_apply == "3")):
-            self.return_answers_by_url(self.email, self.password, homework_url, sections)
+            self.return_answers_by_url(self.email, self.password, homework_url, sections, verbose)
