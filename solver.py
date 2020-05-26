@@ -1,11 +1,12 @@
-import solver_class, subprocess, os.path, smtplib, types
+import homework_solver, subprocess, os.path, smtplib, types, getpass
 
 course_options = {"1": "https://aprendoencasa.pe/#/nivel/secundaria/grade/3/speciality/37/resources", "2":"https://aprendoencasa.pe/#/nivel/secundaria/grade/3/speciality/33/resources", "quit":"quit"}
 send_email_options = ["1", "2", "quit"]
-solving_options = ["1", "2", "3", "quit"]
+solving_options = ["1", "2", "3", "4", "quit"]
 verbose_options = ["1", "2", "quit"]
 
 print("------------------Welcome------------------\n")
+print("[!] This program should not be runned in root mode, it will crash if so")
 print("This program is meant to solve the homework of DPCC and Communication, 'quit' if you wish to exit the program. Enjoy !\n")
 
 email = ""
@@ -59,7 +60,7 @@ while True:
 while True:
     if send == "1":
         email = raw_input("Email : ")
-        password = raw_input("Password : ")
+        password = getpass.getpass("Password : ")
         print("[+] Checking account...")
         if not login(email, password):
             print("[-] Incorrect Email or Password")
@@ -76,6 +77,7 @@ Do you wish to solve the homework by link or by document? ('By document' is fast
 1) By Document
 2) By Link (All Homework Documents)
 3) From One Section Until The Next
+4) One Section
 """)
 
 while True:
@@ -113,6 +115,15 @@ if byOption == "3":
             print("[-] Enter a valid option, follow the example")
             break
 
+if byOption == "4":
+    while True:
+        section_to_get = raw_input("Section you wish to solve (eg 1) : ")
+        try:
+            sections.append(int(section_to_get))
+            break
+        except ValueError:
+            print("[-] Enter a valid option, follow the example")
+            continue
 print("""
 Would you like to display extra information after the program execution?
 1) Yes
@@ -125,13 +136,20 @@ while True:
         continue
     elif set_verbose == "1":
         verbose = True
+        print(verbose)
         break
     elif set_verbose == "quit":
         exit()
     else:
-        verbose = False
         break
-
+# print(sections)
+# print(email)
+# print(password)
+# print(document_name)
+# print(byOption)
+# print(section_to_get)
+# print(sections)
+# print(verbose)
 clear_screen()
 solver = homework_solver.HomeworkSolver(email, password)
 solver.run(byOption, course_options[subject_homework_to_solve], document_name, sections, verbose)
